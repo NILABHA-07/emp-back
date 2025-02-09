@@ -1,9 +1,13 @@
 package com.nilabha.EmployeeApp.EmployeeApp.controllers;
 
 import com.nilabha.EmployeeApp.EmployeeApp.dto.EmployeeDTO;
+import com.nilabha.EmployeeApp.EmployeeApp.exceptions.ResourceNotFoundException;
 import com.nilabha.EmployeeApp.EmployeeApp.services.EmployeeService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,16 +22,22 @@ private final EmployeeService employeeService;
     }
 
     @GetMapping("/{id}")
-    public Optional<EmployeeDTO> getEmployeeById(@PathVariable Long id){
-        return employeeService.getEmployeeById(id);
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id){
+        Optional<EmployeeDTO> employeeDTO=employeeService.getEmployeeById(id);
+        return employeeDTO
+                .map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
+                .orElseThrow(()->new ResourceNotFoundException("Employee is not found with id: "+id));
     }
 
     @GetMapping
-    public List<EmployeeDTO> getAllEmployees(){
-        return  employeeService.getAllEmployee();
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
+        return  ResponseEntity.ok(employeeService.getAllEmployee());
     }
     @PostMapping
-    public EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO employeeDTO){
-        return employeeService.createNewEmployee(employeeDTO);
+    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody @Valid EmployeeDTO employeeDTO){
+        EmployeeDTO savedEmployee=employeeService.createNewEmployee(employeeDTO);
+        return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
+
+
 }
