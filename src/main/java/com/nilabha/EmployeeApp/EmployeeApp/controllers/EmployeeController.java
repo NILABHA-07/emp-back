@@ -4,11 +4,14 @@ import com.nilabha.EmployeeApp.EmployeeApp.dto.EmployeeDTO;
 import com.nilabha.EmployeeApp.EmployeeApp.exceptions.ResourceNotFoundException;
 import com.nilabha.EmployeeApp.EmployeeApp.services.EmployeeService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +41,21 @@ private final EmployeeService employeeService;
         EmployeeDTO savedEmployee=employeeService.createNewEmployee(employeeDTO);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
+    @PutMapping("/{employeeId}")
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long employeeId,@RequestBody EmployeeDTO updatedEmployee){
+        return ResponseEntity.ok(employeeService.updateEmployeeById(employeeId,updatedEmployee));
+    }
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable Long employeeId){
+        return ResponseEntity.ok(employeeService.deleteEmployeeById(employeeId));
+    }
+    @PatchMapping("/{employeeId}")
+    public ResponseEntity<EmployeeDTO> partiallyUpdateEmployeeById(@PathVariable Long employeeId,@RequestBody Map<String, Object> updates){
+        EmployeeDTO employeeDTO=employeeService.updatePartialEmployee(employeeId,updates);
+        if(employeeId==null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(employeeDTO);
+    }
+
 
 
 }
