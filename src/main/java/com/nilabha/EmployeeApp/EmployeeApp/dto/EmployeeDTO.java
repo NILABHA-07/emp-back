@@ -1,5 +1,6 @@
 package com.nilabha.EmployeeApp.EmployeeApp.dto;
 
+import com.nilabha.EmployeeApp.EmployeeApp.annotations.EmployeeRoleValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,7 @@ private String email;
 @Min(value=18,message = "Age can't be less than 20 years")
 private Integer age;
 @NotBlank(message = "role field can't be blank")
-@Pattern(regexp = "^(ADMIN|USER)$",message = "the roles can be only ADMIN or USER")
+@EmployeeRoleValidation
 private String role;
 @NotNull
 @Positive
