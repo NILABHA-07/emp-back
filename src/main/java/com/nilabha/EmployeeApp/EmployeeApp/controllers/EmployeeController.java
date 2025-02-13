@@ -42,7 +42,7 @@ private final EmployeeService employeeService;
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
     @PutMapping("/{employeeId}")
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long employeeId,@RequestBody EmployeeDTO updatedEmployee){
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@PathVariable Long employeeId,@RequestBody @Valid EmployeeDTO updatedEmployee){
         return ResponseEntity.ok(employeeService.updateEmployeeById(employeeId,updatedEmployee));
     }
     @DeleteMapping("/{employeeId}")
